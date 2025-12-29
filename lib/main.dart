@@ -1,7 +1,9 @@
+import 'package:flame/camera.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/widgets.dart';
-import 'package:run_box/my_world.dart';
+import 'package:run_box/my_game.dart';
 
 void main() {
-  runApp(GameWidget(game: FlameGame(world: MyWorld())));
+  final game = MyGame();
+  runApp(GameWidget(game: game));
 }
