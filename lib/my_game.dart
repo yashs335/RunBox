@@ -6,6 +6,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
 import 'package:flutter/material.dart';
+import 'package:run_box/spirits/button.dart';
 import 'package:run_box/spirits/player.dart';
 import 'package:run_box/spirits/rock.dart';
 
@@ -29,7 +30,6 @@ class MyGame extends FlameGame with PanDetector {
 
     add(parallax);
     player = Player();
-
     add(player);
     final Rock rock = Rock();
 
@@ -44,25 +44,29 @@ class MyGame extends FlameGame with PanDetector {
       ),
     );
 
-    add(
-      ButtonComponent(
-        position: Vector2(0, 0),
-        onPressed: () {
-          player.goLeft();
-        },
-      ),
+    final leftButton = Button(
+      imagePath: 'left.png',
+      onTapDownCallback: player.moveLeft,
+      onTapUpCallback: player.stop,
+      onTapCancelCallback: player.stop,
+      position: Vector2(0, size.y - 100),
     );
+
+    final rightButton = Button(
+      imagePath: 'right.png',
+      onTapDownCallback: player.moveRight,
+      onTapUpCallback: player.stop,
+      onTapCancelCallback: player.stop,
+      position: Vector2(size.x - 100, size.y - 100),
+    );
+
+    add(leftButton);
+    add(rightButton);
 
     // world.add(player);
 
     debugMode = true;
     return super.onLoad();
-  }
-
-  @override
-  void onPanUpdate(DragUpdateInfo info) {
-    player.move(info.delta.global);
-    super.onPanUpdate(info);
   }
 
   @override

@@ -2,10 +2,14 @@ import 'package:flame/components.dart';
 import 'package:run_box/my_game.dart';
 import 'package:run_box/spirits/bullet.dart';
 
+enum PlayerDirection { left, right, none }
+
 class Player extends SpriteAnimationComponent with HasGameReference<MyGame> {
   Player({super.position})
-    : super(size: Vector2(100, 150), anchor: Anchor.center);
+      : super(size: Vector2(100, 150), anchor: Anchor.center);
   late TimerComponent _shootTimer;
+  PlayerDirection _direction = PlayerDirection.none;
+  final double _speed = 300;
 
   @override
   Future<void> onLoad() async {
@@ -33,18 +37,27 @@ class Player extends SpriteAnimationComponent with HasGameReference<MyGame> {
     add(_shootTimer);
   }
 
-  void move(Vector2 delta) {
-    position.add(delta);
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (_direction == PlayerDirection.left) {
+      position.x -= _speed * dt;
+    } else if (_direction == PlayerDirection.right) {
+      position.x += _speed * dt;
+    }
     position.x = position.x.clamp(width / 2, game.width - width / 2);
-    position.y = position.y.clamp(height / 2, game.height - height / 2);
   }
 
-  void goLeft() {
-    move(Vector2(position.x--, 0));
+  void moveLeft() {
+    _direction = PlayerDirection.left;
   }
 
-  void goRight() {
-    move(Vector2(position.x++, 0));
+  void moveRight() {
+    _direction = PlayerDirection.right;
+  }
+
+  void stop() {
+    _direction = PlayerDirection.none;
   }
 
   void startShooting() {
